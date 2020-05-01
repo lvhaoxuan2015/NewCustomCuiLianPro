@@ -49,7 +49,7 @@ public class MoveLevelHandle {
             gui.addSlot(slot2);
             ItemStack item = new ItemStack(Material.ANVIL);
             ItemMeta meta = item.getItemMeta();
-            meta.setDisplayName("§a把左边装备所有等级移给右边装备");
+            meta.setDisplayName("§a淬炼移星");
             List<String> lore = new ArrayList();
             lore.add("§7把左边装备所有等级移给右边装备。");
             meta.setLore(lore);
