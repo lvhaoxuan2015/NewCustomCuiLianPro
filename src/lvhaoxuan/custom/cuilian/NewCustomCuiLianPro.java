@@ -9,6 +9,7 @@ import lvhaoxuan.custom.cuilian.listener.FurnaceListener;
 import lvhaoxuan.custom.cuilian.listener.ProtectRuneListener;
 import lvhaoxuan.custom.cuilian.loader.Loader;
 import lvhaoxuan.custom.cuilian.metrics.Metrics;
+import lvhaoxuan.custom.cuilian.movelevel.MoveLevelHandle;
 import lvhaoxuan.custom.cuilian.runnable.ScriptRunnable;
 import lvhaoxuan.custom.cuilian.runnable.SyncEffectRunnable;
 import lvhaoxuan.llib.util.MathUtil;
@@ -58,6 +59,7 @@ public class NewCustomCuiLianPro extends JavaPlugin {
         Loader.loadItems();
         Loader.loadLevels();
         Loader.loadStones();
+        MoveLevelHandle.init();
     }
 
     public static void setRecipe() {

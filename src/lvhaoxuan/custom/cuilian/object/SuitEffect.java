@@ -87,7 +87,7 @@ public class SuitEffect {
         List<String> names = config.getStringList(path + ".Script");
         List<ScriptEngine> script = new ArrayList<>();
         for (String name : names) {
-            script.add(Loader.loadScript(name));
+            script.add(Loader.loadSuitEffectScript(name));
         }
         return new SuitEffect(config.getStringList(path + ".PotionEffect"),
                 config.getStringList(path + ".Attribute"),

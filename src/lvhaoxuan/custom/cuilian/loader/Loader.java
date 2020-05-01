@@ -12,6 +12,7 @@ import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 import lvhaoxuan.custom.cuilian.NewCustomCuiLianPro;
 import lvhaoxuan.custom.cuilian.NewCustomCuiLianPro.ItemType;
+import lvhaoxuan.custom.cuilian.movelevel.MoveLevelHandle;
 import lvhaoxuan.custom.cuilian.object.Level;
 import lvhaoxuan.custom.cuilian.object.Stone;
 import lvhaoxuan.custom.cuilian.object.SuitEffect;
@@ -97,11 +98,12 @@ public class Loader {
             NewCustomCuiLianPro.otherEntitySuitEffect = config.getBoolean("OtherEntitySuitEffect");
             NewCustomCuiLianPro.PROTECT_RUNE_JUDGE = config.getString("PROTECT_RUNE_JUDGE");
             NewCustomCuiLianPro.LEVEL_JUDGE = config.getString("LEVEL_JUDGE");
+            MoveLevelHandle.moveLevelInvTitle = config.getString("MoveLevelInvTitle");
         } catch (FileNotFoundException | UnsupportedEncodingException ex) {
         }
     }
 
-    public static ScriptEngine loadScript(String name) {
+    public static ScriptEngine loadSuitEffectScript(String name) {
         if (!NewCustomCuiLianPro.ins.getDataFolder().exists()) {
             NewCustomCuiLianPro.ins.getDataFolder().mkdir();
         }
@@ -117,12 +119,30 @@ public class Loader {
             } catch (IOException ex) {
             }
         }
-        ScriptEngine engine = new ScriptEngineManager().getEngineByName("nashorn");
-        try {
-            engine.eval(FileUtil.read(file));
-        } catch (ScriptException ex) {
-            Logger.getLogger(Loader.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        return loadScript(file);
+    }
+
+    public static ScriptEngine loadMoveLevelScript() {
+        if (!NewCustomCuiLianPro.ins.getDataFolder().exists()) {
+            NewCustomCuiLianPro.ins.getDataFolder().mkdir();
         }
-        return engine;
+        File file = new File(NewCustomCuiLianPro.ins.getDataFolder(), "movelevelscript.js");
+        if (!file.exists()) {
+            NewCustomCuiLianPro.ins.saveResource("movelevelscript.js", true);
+        }
+        return loadScript(file);
+    }
+
+    public static ScriptEngine loadScript(File file) {
+        if (file.exists()) {
+            ScriptEngine engine = new ScriptEngineManager().getEngineByName("nashorn");
+            try {
+                engine.eval(FileUtil.read(file));
+            } catch (ScriptException ex) {
+                Logger.getLogger(Loader.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            }
+            return engine;
+        }
+        return null;
     }
 }
