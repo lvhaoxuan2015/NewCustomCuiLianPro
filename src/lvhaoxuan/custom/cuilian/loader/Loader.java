@@ -99,6 +99,7 @@ public class Loader {
             NewCustomCuiLianPro.PROTECT_RUNE_JUDGE = config.getString("PROTECT_RUNE_JUDGE");
             NewCustomCuiLianPro.LEVEL_JUDGE = config.getString("LEVEL_JUDGE");
             MoveLevelHandle.moveLevelInvTitle = config.getString("MoveLevelInvTitle");
+            NewCustomCuiLianPro.judgeOffHand = config.getBoolean("JudgeOffHand");
         } catch (FileNotFoundException | UnsupportedEncodingException ex) {
         }
     }

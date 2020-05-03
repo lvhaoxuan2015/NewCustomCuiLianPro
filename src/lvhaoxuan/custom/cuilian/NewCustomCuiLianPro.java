@@ -28,6 +28,7 @@ public class NewCustomCuiLianPro extends JavaPlugin {
     public static HashMap<Material, String> typesInBag = new HashMap<>();
     public static List<ItemType> types = new ArrayList<>();
     public static boolean otherEntitySuitEffect;
+    public static boolean judgeOffHand;
     public static boolean apEnable = false;
     public static boolean sxEnable = false;
 
@@ -51,6 +52,11 @@ public class NewCustomCuiLianPro extends JavaPlugin {
         setRecipe();
         Bukkit.getScheduler().runTaskTimerAsynchronously(NewCustomCuiLianPro.ins, new SyncEffectRunnable(), 0, 10);
         Bukkit.getScheduler().runTaskTimerAsynchronously(NewCustomCuiLianPro.ins, new ScriptRunnable(), 0, 2);
+    }
+
+    @Override
+    public void onDisable() {
+        Bukkit.getScheduler().cancelTasks(this);
     }
 
     public static void enableConfig() {

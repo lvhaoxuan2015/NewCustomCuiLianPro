@@ -29,7 +29,7 @@ public class ScriptRunnable implements Runnable {
                         invocable.invokeFunction("onEffectTick", le);
                     }
                 }
-            } catch (NoSuchMethodException | ScriptException ex) {
+            } catch (NoSuchMethodException | ScriptException | ClassCastException ex) {
                 Logger.getLogger(SyncEffectRunnable.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
                 enbaleScript = false;
             }

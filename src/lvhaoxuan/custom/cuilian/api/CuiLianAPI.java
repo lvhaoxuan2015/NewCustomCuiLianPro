@@ -21,11 +21,13 @@ public class CuiLianAPI {
     public static boolean hasOffHand;
 
     static {
-        try {
-            EntityEquipment.class.getMethod("getItemInOffHand");
-            hasOffHand = true;
-        } catch (NoSuchMethodException | SecurityException ex) {
-            hasOffHand = false;
+        hasOffHand = NewCustomCuiLianPro.judgeOffHand;
+        if (hasOffHand) {
+            try {
+                EntityEquipment.class.getMethod("getItemInOffHand");
+            } catch (NoSuchMethodException | SecurityException ex) {
+                hasOffHand = false;
+            }
         }
     }
 
@@ -61,7 +63,7 @@ public class CuiLianAPI {
                 if (protectRune != null) {
                     if (protectRune.value <= basicLevel) {
                         if (basicLevel - protectRune.value <= dropLevel) {
-                            dropLevel = LLibAPI.getRandom(0, basicLevel - protectRune.value);
+                            dropLevel = basicLevel - protectRune.value != 0 ? LLibAPI.getRandom(0, basicLevel - protectRune.value) : 0;
                         }
                         toLevel = Level.levels.get(basicLevel - dropLevel);
                         item = setItemLevel(item, toLevel);

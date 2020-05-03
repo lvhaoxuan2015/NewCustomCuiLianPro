@@ -5,3 +5,6 @@ PROTECT_RUNE_JUDGE: "§1§a§3§c§5"
 LEVEL_JUDGE: "§9§5§7§a§3"
 #属性lore行识别符号，不冲突的情况下勿乱改
 MoveLevelInvTitle: "淬炼移星"
+#移星界面标题
+JudgeOffHand: true
+#套装效果是否判断副手
