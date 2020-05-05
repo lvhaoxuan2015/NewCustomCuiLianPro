@@ -88,11 +88,14 @@ public class CuiLianAPI {
         if (canCuiLian(item)) {
             int basicLevel = (level != null ? level.value : 0);
             ItemMeta meta = item.getItemMeta();
+            setDisplayName(meta, basicLevel);
             List<String> lore = meta.hasLore() ? meta.getLore() : new ArrayList<>();
             lore = cleanLevel(lore);
             lore = cleanProtectRune(lore);
             if (level != null) {
-                lore.add(NewCustomCuiLianPro.LEVEL_JUDGE + Message.UNDER_LINE);
+                if (!Message.UNDER_LINE.isEmpty()) {
+                    lore.add(NewCustomCuiLianPro.LEVEL_JUDGE + Message.UNDER_LINE);
+                }
                 for (String line : level.lore) {
                     lore.add(NewCustomCuiLianPro.LEVEL_JUDGE + line);
                 }
@@ -108,6 +111,13 @@ public class CuiLianAPI {
             item.setItemMeta(meta);
         }
         return item;
+    }
+
+    public static void setDisplayName(ItemMeta meta, int basicLevel) {
+        String displayName = meta.hasDisplayName() ? meta.getDisplayName() : "";
+        displayName = displayName.replaceAll("\\+[0-9]* ", "");
+        displayName = "§f+" + basicLevel + " " + displayName;
+        meta.setDisplayName(displayName);
     }
 
     public static ItemStack addProtectRune(ItemStack item, ProtectRune protectRune) {
