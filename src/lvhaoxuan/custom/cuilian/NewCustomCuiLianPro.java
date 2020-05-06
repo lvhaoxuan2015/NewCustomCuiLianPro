@@ -47,14 +47,13 @@ public class NewCustomCuiLianPro extends JavaPlugin {
             sxEnable = true;
         }
         enableConfig();
-        checkVersion();
+        //checkVersion();
         this.getServer().getPluginCommand("cuilian").setExecutor(new Commander());
         this.getServer().getPluginManager().registerEvents(new FurnaceListener(), this);
         this.getServer().getPluginManager().registerEvents(new ProtectRuneListener(), this);
         setRecipe();
         Bukkit.getScheduler().runTaskTimerAsynchronously(NewCustomCuiLianPro.ins, new SyncEffectRunnable(), 0, 10);
         Bukkit.getScheduler().runTaskTimerAsynchronously(NewCustomCuiLianPro.ins, new ScriptRunnable(), 0, 2);
-
     }
 
     @Override
