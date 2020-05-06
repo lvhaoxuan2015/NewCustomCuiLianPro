@@ -36,12 +36,14 @@ public class FurnaceListener implements Listener {
         ItemStack smelt = furnace.getInventory().getSmelting();
         Stone stone = Stone.byItemStack(fuel);
         Level level = Level.byItemStack(smelt);
-        if (stone != null && CuiLianAPI.canCuiLian(smelt) && Level.levels.get((level != null ? level.value : 0) + stone.riseLevel) != null) {
-            furnace.setMetadata("FurnaceFuel", new FixedMetadataValue(NewCustomCuiLianPro.ins, stone));
-            e.setBurning(true);
-            e.setBurnTime(200);
-        } else {
-            e.setCancelled(true);
+        if (CuiLianAPI.canCuiLian(smelt)) {
+            if (stone != null && Level.levels.get((level != null ? level.value : 0) + stone.riseLevel) != null) {
+                furnace.setMetadata("FurnaceFuel", new FixedMetadataValue(NewCustomCuiLianPro.ins, stone));
+                e.setBurning(true);
+                e.setBurnTime(200);
+            } else {
+                e.setCancelled(true);
+            }
         }
     }
 
@@ -57,6 +59,8 @@ public class FurnaceListener implements Listener {
             smelt = CuiLianAPI.cuilian(stone, smelt, p);
             e.setResult(smelt);
             furnace.removeMetadata("FurnaceFuel", NewCustomCuiLianPro.ins);
+        } else if (CuiLianAPI.canCuiLian(smelt)) {
+            e.setResult(smelt);
         }
     }
 }
