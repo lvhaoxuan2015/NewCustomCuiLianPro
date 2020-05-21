@@ -100,6 +100,8 @@ public class Loader {
             NewCustomCuiLianPro.LEVEL_JUDGE = config.getString("LEVEL_JUDGE");
             MoveLevelHandle.moveLevelInvTitle = config.getString("MoveLevelInvTitle");
             NewCustomCuiLianPro.judgeOffHand = config.getBoolean("JudgeOffHand");
+            NewCustomCuiLianPro.displayNameFormat = config.getString("DisplayNameFormat");
+            NewCustomCuiLianPro.replaceLore = config.getStringList("ReplaceLore");
         } catch (FileNotFoundException | UnsupportedEncodingException ex) {
         }
     }

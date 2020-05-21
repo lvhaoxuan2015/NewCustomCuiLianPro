@@ -92,6 +92,7 @@ public class CuiLianAPI {
             List<String> lore = meta.hasLore() ? meta.getLore() : new ArrayList<>();
             lore = cleanLevel(lore);
             lore = cleanProtectRune(lore);
+            lore = replaceLore(lore);
             if (level != null) {
                 if (!Message.UNDER_LINE.isEmpty()) {
                     lore.add(NewCustomCuiLianPro.LEVEL_JUDGE + Message.UNDER_LINE);
@@ -115,8 +116,8 @@ public class CuiLianAPI {
 
     public static void setDisplayName(ItemMeta meta, int basicLevel) {
         String displayName = meta.hasDisplayName() ? meta.getDisplayName() : "";
-        displayName = displayName.replaceAll("\\+[0-9]* ", "");
-        displayName = "§f+" + basicLevel + " " + displayName;
+        displayName = displayName.replaceAll("\\+[0-9]*", "");
+        displayName = NewCustomCuiLianPro.displayNameFormat.replace("%level%", "+" + basicLevel).replace("%name%", displayName);
         meta.setDisplayName(displayName);
     }
 
@@ -147,6 +148,17 @@ public class CuiLianAPI {
         for (int i = 0; i < lore.size(); i++) {
             if (lore.get(i).contains(NewCustomCuiLianPro.PROTECT_RUNE_JUDGE)) {
                 lore.remove(i--);
+            }
+        }
+        return lore;
+    }
+
+    public static List<String> replaceLore(List<String> lore) {
+        for (int i = 0; i < lore.size(); i++) {
+            for (String replace : NewCustomCuiLianPro.replaceLore) {
+                if (lore.get(i).contains(replace)) {
+                    lore.remove(i--);
+                }
             }
         }
         return lore;
