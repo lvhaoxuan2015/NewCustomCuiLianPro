@@ -1,6 +1,7 @@
 package lvhaoxuan.custom.cuilian.api;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import lvhaoxuan.custom.cuilian.NewCustomCuiLianPro;
 import lvhaoxuan.custom.cuilian.message.Message;
@@ -8,13 +9,13 @@ import lvhaoxuan.custom.cuilian.object.Level;
 import lvhaoxuan.custom.cuilian.object.ProtectRune;
 import lvhaoxuan.custom.cuilian.object.Stone;
 import lvhaoxuan.llib.api.LLibAPI;
-//import lvhaoxuan.llib.util.NBT;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.Material;
 
 public class CuiLianAPI {
 
@@ -88,11 +89,11 @@ public class CuiLianAPI {
         if (canCuiLian(item)) {
             int basicLevel = (level != null ? level.value : 0);
             ItemMeta meta = item.getItemMeta();
-            setDisplayName(meta, basicLevel);
+            setDisplayName(item.getType(), meta, basicLevel);
             List<String> lore = meta.hasLore() ? meta.getLore() : new ArrayList<>();
+            lore = replaceLore(lore);
             lore = cleanLevel(lore);
             lore = cleanProtectRune(lore);
-            lore = replaceLore(lore);
             if (level != null) {
                 if (!Message.UNDER_LINE.isEmpty()) {
                     lore.add(NewCustomCuiLianPro.LEVEL_JUDGE + Message.UNDER_LINE);
@@ -114,11 +115,18 @@ public class CuiLianAPI {
         return item;
     }
 
-    public static void setDisplayName(ItemMeta meta, int basicLevel) {
-        String displayName = meta.hasDisplayName() ? meta.getDisplayName() : "";
-        displayName = displayName.replaceAll("\\+[0-9]*", "");
-        displayName = NewCustomCuiLianPro.displayNameFormat.replace("%level%", "+" + basicLevel).replace("%name%", displayName);
-        meta.setDisplayName(displayName);
+    public static void setDisplayName(Material type, ItemMeta meta, int basicLevel) {
+        if (NewCustomCuiLianPro.displayNameFormat == 1) {
+            String displayName = meta.hasDisplayName() ? meta.getDisplayName() : chineseDisplayName(type);
+            displayName = displayName.replaceAll("\\+[0-9]* ", "");
+            displayName = "§f+" + basicLevel + " " + displayName;
+            meta.setDisplayName(displayName);
+        } else if (NewCustomCuiLianPro.displayNameFormat == 2) {
+            String displayName = meta.hasDisplayName() ? meta.getDisplayName() : chineseDisplayName(type);
+            displayName = displayName.replaceAll(" \\+[0-9]*", "");
+            displayName = displayName + " +" + basicLevel;
+            meta.setDisplayName(displayName);
+        }
     }
 
     public static ItemStack addProtectRune(ItemStack item, ProtectRune protectRune) {
@@ -136,28 +144,34 @@ public class CuiLianAPI {
     }
 
     public static List<String> cleanLevel(List<String> lore) {
-        for (int i = 0; i < lore.size(); i++) {
-            if (lore.get(i).contains(NewCustomCuiLianPro.LEVEL_JUDGE)) {
-                lore.remove(i--);
+        Iterator<String> iterator = lore.iterator();
+        while (iterator.hasNext()) {
+            String line = iterator.next();
+            if (line.contains(NewCustomCuiLianPro.LEVEL_JUDGE)) {
+                iterator.remove();
             }
         }
         return lore;
     }
 
     public static List<String> cleanProtectRune(List<String> lore) {
-        for (int i = 0; i < lore.size(); i++) {
-            if (lore.get(i).contains(NewCustomCuiLianPro.PROTECT_RUNE_JUDGE)) {
-                lore.remove(i--);
+        Iterator<String> iterator = lore.iterator();
+        while (iterator.hasNext()) {
+            String line = iterator.next();
+            if (line.contains(NewCustomCuiLianPro.PROTECT_RUNE_JUDGE)) {
+                iterator.remove();
             }
         }
         return lore;
     }
 
     public static List<String> replaceLore(List<String> lore) {
-        for (int i = 0; i < lore.size(); i++) {
+        Iterator<String> iterator = lore.iterator();
+        while (iterator.hasNext()) {
+            String line = iterator.next();
             for (String replace : NewCustomCuiLianPro.replaceLore) {
-                if (lore.get(i).contains(replace)) {
-                    lore.remove(i--);
+                if (line.contains(replace)) {
+                    iterator.remove();
                 }
             }
         }
@@ -182,5 +196,64 @@ public class CuiLianAPI {
             ret = (ret == -1 ? basicLevel : Math.min(ret, basicLevel));
         }
         return Level.levels.get(ret);
+    }
+
+    public static String chineseDisplayName(Material type) {
+        switch (type) {
+            case BOW:
+                return "§f弓";
+            case IRON_SWORD:
+                return "§f铁剑";
+            case WOOD_SWORD:
+                return "§f木剑";
+            case STONE_SWORD:
+                return "§f石剑";
+            case DIAMOND_SWORD:
+                return "§f钻石剑";
+            case GOLD_SWORD:
+                return "§f金剑";
+            case LEATHER_HELMET:
+                return "§f皮头盔";
+            case LEATHER_CHESTPLATE:
+                return "§f皮胸甲";
+            case LEATHER_LEGGINGS:
+                return "§f皮护腿";
+            case LEATHER_BOOTS:
+                return "§f皮靴子";
+            case CHAINMAIL_HELMET:
+                return "§f锁链头盔";
+            case CHAINMAIL_CHESTPLATE:
+                return "§f锁链胸甲";
+            case CHAINMAIL_LEGGINGS:
+                return "§f锁链护腿";
+            case CHAINMAIL_BOOTS:
+                return "§f锁链靴子";
+            case IRON_HELMET:
+                return "§f铁头盔";
+            case IRON_CHESTPLATE:
+                return "§f铁胸甲";
+            case IRON_LEGGINGS:
+                return "§f铁护腿";
+            case IRON_BOOTS:
+                return "§f铁靴子";
+            case DIAMOND_HELMET:
+                return "§f钻石头盔";
+            case DIAMOND_CHESTPLATE:
+                return "§f钻石胸甲";
+            case DIAMOND_LEGGINGS:
+                return "§f钻石护腿";
+            case DIAMOND_BOOTS:
+                return "§f钻石靴子";
+            case GOLD_HELMET:
+                return "§f金头盔";
+            case GOLD_CHESTPLATE:
+                return "§f金胸甲";
+            case GOLD_LEGGINGS:
+                return "§f金护腿";
+            case GOLD_BOOTS:
+                return "§f金靴子";
+            default:
+                return type.name();
+        }
     }
 }

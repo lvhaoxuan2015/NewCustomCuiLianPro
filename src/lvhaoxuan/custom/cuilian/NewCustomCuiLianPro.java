@@ -30,7 +30,7 @@ public class NewCustomCuiLianPro extends JavaPlugin {
     public static List<ItemType> types = new ArrayList<>();
     public static boolean otherEntitySuitEffect;
     public static boolean judgeOffHand;
-    public static String displayNameFormat;
+    public static int displayNameFormat;
     public static List<String> replaceLore;
     public static boolean apEnable = false;
     public static boolean sxEnable = false;
