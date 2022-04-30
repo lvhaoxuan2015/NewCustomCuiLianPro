@@ -17,6 +17,8 @@ import lvhaoxuan.custom.cuilian.NewCustomCuiLianPro;
 import lvhaoxuan.custom.cuilian.api.CuiLianAPI;
 import lvhaoxuan.custom.cuilian.object.Level;
 import lvhaoxuan.custom.cuilian.object.Stone;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryType;
 
 public class FurnaceListener implements Listener {
 
@@ -61,6 +63,17 @@ public class FurnaceListener implements Listener {
             furnace.removeMetadata("FurnaceFuel", NewCustomCuiLianPro.ins);
         } else if (CuiLianAPI.canCuiLian(smelt)) {
             e.setResult(smelt);
+        }
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void InventoryClickEvent(InventoryClickEvent e) {
+        if (e.getInventory().getType() == InventoryType.FURNACE && e.getSlotType() == InventoryType.SlotType.FUEL && Stone.byItemStack(e.getCursor()) != null) {
+            ItemStack cursor = e.getCursor();
+            ItemStack currentItem = e.getCurrentItem();
+            e.setCursor(currentItem);
+            e.setCurrentItem(cursor);
+            e.setCancelled(true);
         }
     }
 }

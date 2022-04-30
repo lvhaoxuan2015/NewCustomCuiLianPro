@@ -80,7 +80,9 @@ public class CuiLianAPI {
                     sendMessage = Message.CUILIAN_FAIL.replace("%s", toLevel != null ? toLevel.lore.get(0) : "§c§l淬炼消失").replace("%d", String.valueOf(dropLevel));
                 }
             }
-            p.sendMessage(sendMessage);
+            if (p != null) {
+                p.sendMessage(sendMessage);
+            }
         }
         return item;
     }
@@ -96,7 +98,7 @@ public class CuiLianAPI {
             lore = cleanProtectRune(lore);
             if (level != null) {
                 if (!Message.UNDER_LINE.isEmpty()) {
-                    lore.add(NewCustomCuiLianPro.LEVEL_JUDGE + Message.UNDER_LINE);
+                    lore.add(Message.UNDER_LINE);
                 }
                 for (String line : level.lore) {
                     lore.add(NewCustomCuiLianPro.LEVEL_JUDGE + line);
@@ -147,7 +149,7 @@ public class CuiLianAPI {
         Iterator<String> iterator = lore.iterator();
         while (iterator.hasNext()) {
             String line = iterator.next();
-            if (line.contains(NewCustomCuiLianPro.LEVEL_JUDGE)) {
+            if (line.contains(NewCustomCuiLianPro.LEVEL_JUDGE) || line.equals(Message.UNDER_LINE)) {
                 iterator.remove();
             }
         }

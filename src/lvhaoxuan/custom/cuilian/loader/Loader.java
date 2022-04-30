@@ -8,8 +8,8 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.logging.Logger;
 import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
+import org.openjdk.nashorn.api.scripting.*;
 import lvhaoxuan.custom.cuilian.NewCustomCuiLianPro;
 import lvhaoxuan.custom.cuilian.NewCustomCuiLianPro.ItemType;
 import lvhaoxuan.custom.cuilian.movelevel.MoveLevelHandle;
@@ -106,7 +106,7 @@ public class Loader {
         }
     }
 
-    public static ScriptEngine loadSuitEffectScript(String name) {
+    public static String loadSuitEffectScriptStr(String name) {
         if (!NewCustomCuiLianPro.ins.getDataFolder().exists()) {
             NewCustomCuiLianPro.ins.getDataFolder().mkdir();
         }
@@ -122,7 +122,7 @@ public class Loader {
             } catch (IOException ex) {
             }
         }
-        return loadScript(file);
+        return FileUtil.read(file);
     }
 
     public static ScriptEngine loadMoveLevelScript() {
@@ -138,7 +138,7 @@ public class Loader {
 
     public static ScriptEngine loadScript(File file) {
         if (file.exists()) {
-            ScriptEngine engine = new ScriptEngineManager().getEngineByName("nashorn");
+            ScriptEngine engine = new NashornScriptEngineFactory().getScriptEngine();
             try {
                 engine.eval(FileUtil.read(file));
             } catch (ScriptException ex) {

@@ -6,10 +6,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
+import java.util.logging.Logger;
 import lvhaoxuan.custom.cuilian.NewCustomCuiLianPro;
 import lvhaoxuan.custom.cuilian.api.CuiLianAPI;
 import lvhaoxuan.custom.cuilian.message.Message;
 import lvhaoxuan.custom.cuilian.object.Level;
+import lvhaoxuan.llib.util.ParamGroup;
+import lvhaoxuan.llib.util.ReflectUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.LivingEntity;
@@ -25,11 +28,15 @@ public class SyncEffectRunnable implements Runnable {
     @Override
     public void run() {
         for (LivingEntity le : getEntities()) {
-            sync(le);
+            try {
+                sync(le);
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(SyncEffectRunnable.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            }
         }
     }
 
-    public void sync(LivingEntity le) {
+    public void sync(LivingEntity le) throws ClassNotFoundException {
         Level minLevel = CuiLianAPI.getMinLevel(le, le.getEquipment());
         if (minLevel != null && minLevel.suitEffect != null) {
             for (String potionStr : minLevel.suitEffect.potionEffect) {
@@ -44,10 +51,13 @@ public class SyncEffectRunnable implements Runnable {
             if (NewCustomCuiLianPro.apEnable && le instanceof Player) {
                 AttributeAPI.addAttribute((Player) le, "NewCustomCuiLianPro", minLevel.suitEffect.attribute, false);
             }
-            if (NewCustomCuiLianPro.sxEnable && le instanceof Player) {
-                SXAttributeData basic = SXAttribute.getApi().getAPIStats(le.getUniqueId());
-                SXAttributeData data = SXAttribute.getApi().getLoreData(null, null, minLevel.suitEffect.attribute);
-                SXAttribute.getApi().setEntityAPIData(SyncEffectRunnable.class, le.getUniqueId(), basic.add(data));
+            if (NewCustomCuiLianPro.sxv2Enable && le instanceof Player) {
+                SXAttributeData data = (SXAttributeData) ReflectUtil.doMethod(SXAttribute.getApi(), "getLoreData", new ParamGroup(null, LivingEntity.class), new ParamGroup(null, Class.forName("github.saukiya.sxattribute.data.condition.SXConditionType")), new ParamGroup(minLevel.suitEffect.attribute));
+                SXAttribute.getApi().setEntityAPIData(SyncEffectRunnable.class, le.getUniqueId(), data);
+            }
+            if (NewCustomCuiLianPro.sxv3Enable && le instanceof Player) {
+                SXAttributeData data = (SXAttributeData) ReflectUtil.doMethod(SXAttribute.getApi(), "loadListData", new ParamGroup(minLevel.suitEffect.attribute));
+                SXAttribute.getApi().setEntityAPIData(SyncEffectRunnable.class, le.getUniqueId(), data);
             }
             if (!tmpMap.containsKey(le.getUniqueId())) {
                 le.sendMessage(Message.ENABLE_SUIT_EFFECT.replace("%s", minLevel.lore.get(0)));
@@ -65,7 +75,7 @@ public class SyncEffectRunnable implements Runnable {
             if (NewCustomCuiLianPro.apEnable && le instanceof Player) {
                 AttributeAPI.deleteAttribute((Player) le, "NewCustomCuiLianPro");
             }
-            if (NewCustomCuiLianPro.sxEnable && le instanceof Player) {
+            if ((NewCustomCuiLianPro.sxv2Enable || NewCustomCuiLianPro.sxv3Enable) && le instanceof Player) {
                 SXAttribute.getApi().removeEntityAPIData(SyncEffectRunnable.class, le.getUniqueId());
             }
         }

@@ -12,7 +12,6 @@ import lvhaoxuan.custom.cuilian.metrics.Metrics;
 import lvhaoxuan.custom.cuilian.movelevel.MoveLevelHandle;
 import lvhaoxuan.custom.cuilian.runnable.ScriptRunnable;
 import lvhaoxuan.custom.cuilian.runnable.SyncEffectRunnable;
-import lvhaoxuan.llib.util.HttpUtil;
 import lvhaoxuan.llib.util.MathUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -33,7 +32,8 @@ public class NewCustomCuiLianPro extends JavaPlugin {
     public static int displayNameFormat;
     public static List<String> replaceLore;
     public static boolean apEnable = false;
-    public static boolean sxEnable = false;
+    public static boolean sxv2Enable = false;
+    public static boolean sxv3Enable = false;
 
     @Override
     public void onEnable() {
@@ -45,36 +45,21 @@ public class NewCustomCuiLianPro extends JavaPlugin {
             apEnable = true;
         }
         if (this.getServer().getPluginManager().getPlugin("SX-Attribute") != null) {
-            this.getServer().getConsoleSender().sendMessage("§7[§e" + this.getName() + "§7]§a检测到SX-Attribute插件，属性模块加载");
-            sxEnable = true;
+            if (this.getServer().getPluginManager().getPlugin("SX-Attribute").getDescription().getVersion().startsWith("2")) {
+                sxv2Enable = true;
+                this.getServer().getConsoleSender().sendMessage("§7[§e" + this.getName() + "§7]§a检测到SX-AttributeV2.X插件，属性模块加载");
+            } else if (this.getServer().getPluginManager().getPlugin("SX-Attribute").getDescription().getVersion().startsWith("3")) {
+                this.getServer().getConsoleSender().sendMessage("§7[§e" + this.getName() + "§7]§a检测到SX-AttributeV3.X插件，属性模块加载");
+                sxv3Enable = true;
+            }
         }
         enableConfig();
-        //checkVersion();
         this.getServer().getPluginCommand("cuilian").setExecutor(new Commander());
         this.getServer().getPluginManager().registerEvents(new FurnaceListener(), this);
         this.getServer().getPluginManager().registerEvents(new ProtectRuneListener(), this);
         setRecipe();
-        Bukkit.getScheduler().runTaskTimerAsynchronously(NewCustomCuiLianPro.ins, new SyncEffectRunnable(), 0, 10);
         Bukkit.getScheduler().runTaskTimerAsynchronously(NewCustomCuiLianPro.ins, new ScriptRunnable(), 0, 2);
-    }
-
-    @Override
-    public void onDisable() {
-        Bukkit.getScheduler().cancelTasks(this);
-    }
-
-    public void checkVersion() {
-        String ip = "http://raw.githubusercontent.com/lvhaoxuan2015/NewCustomCuiLianPro/master/version.txt";
-        String ret = HttpUtil.invokeUrl(ip, new HashMap<>(), "UTF-8", "GET");
-        String[] lines = ret.split("\n");
-        String selfVersion = getDescription().getVersion();
-        String newestVersion = lines[0];
-        if (!selfVersion.equals(newestVersion)) {
-            this.getServer().getConsoleSender().sendMessage("§7[§e" + this.getName() + "§7]§a插件有更新版本: " + newestVersion);
-            for (String line : lines) {
-                this.getServer().getConsoleSender().sendMessage("§7[§e" + this.getName() + "§7]" + line);
-            }
-        }
+        Bukkit.getScheduler().runTaskTimerAsynchronously(NewCustomCuiLianPro.ins, new SyncEffectRunnable(), 0, 10);
     }
 
     public static void enableConfig() {

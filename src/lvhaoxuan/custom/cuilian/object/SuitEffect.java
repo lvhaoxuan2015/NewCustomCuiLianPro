@@ -2,7 +2,6 @@ package lvhaoxuan.custom.cuilian.object;
 
 import java.util.ArrayList;
 import java.util.List;
-import javax.script.ScriptEngine;
 import lvhaoxuan.custom.cuilian.loader.Loader;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -72,9 +71,9 @@ public class SuitEffect {
             + "}";
     public List<String> potionEffect;
     public List<String> attribute;
-    public List<ScriptEngine> script;
+    public List<String> script;
 
-    public SuitEffect(List<String> potionEffect, List<String> attribute, List<ScriptEngine> script) {
+    public SuitEffect(List<String> potionEffect, List<String> attribute, List<String> script) {
         this.potionEffect = potionEffect;
         this.attribute = attribute;
         this.script = script;
@@ -85,9 +84,9 @@ public class SuitEffect {
             return null;
         }
         List<String> names = config.getStringList(path + ".Script");
-        List<ScriptEngine> script = new ArrayList<>();
+        List<String> script = new ArrayList<>();
         for (String name : names) {
-            script.add(Loader.loadSuitEffectScript(name));
+            script.add(Loader.loadSuitEffectScriptStr(name));
         }
         return new SuitEffect(config.getStringList(path + ".PotionEffect"),
                 config.getStringList(path + ".Attribute"),

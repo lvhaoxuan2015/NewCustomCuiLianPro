@@ -1,8 +1,8 @@
 OtherEntitySuitEffect: false
 #开启非玩家实体套装粒子特效 true(开)/false(关) 不建议开启
-PROTECT_RUNE_JUDGE: "§1§a§3§c§5"
+PROTECT_RUNE_JUDGE: "§a§l保护符: "
 #保护符lore行识别符号，不冲突的情况下勿乱改
-LEVEL_JUDGE: "§9§5§7§a§3"
+LEVEL_JUDGE: "§e§l淬炼属性: "
 #属性lore行识别符号，不冲突的情况下勿乱改
 MoveLevelInvTitle: "淬炼移星"
 #移星界面标题
